@@ -5,6 +5,7 @@ signal mark_clicked
 var enabled = true
 var _selected = false
 var _click_saved = false
+onready var board = get_node("../..")
 
 
 func _ready():
@@ -17,7 +18,7 @@ func _ready():
 
 
 func _input(event):
-	# forget that a tile was selected if mouse clicked outside of the tile
+	# forget that a tile was selected if mouse is clicked outside of the tile
 	if not (event is InputEventMouseButton) or\
 			 event.get_button_index() != BUTTON_LEFT:
 		return
@@ -37,6 +38,13 @@ func turn_off():
 	get_node("X").visible = false
 
 
+func toggle_mark():
+	enabled = false
+	turn_on(board.use_circle)
+	emit_signal("mark_clicked")
+	print(self.name + " clicked & disabled!")
+
+
 # called when a tile is left-clicked
 func _on_click(_viewport, event, _shape_idx):
 	if not (event is InputEventMouseButton) or\
@@ -48,10 +56,7 @@ func _on_click(_viewport, event, _shape_idx):
 		return
 	elif _selected:
 		_selected = false
-		enabled = false
-		turn_on(true)
-		emit_signal("mark_clicked")
-		print(self.name + " clicked & disabled!")
+		toggle_mark()
 
 
 func _on_mouse_exit():
