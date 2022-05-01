@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Tile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://board.gd" type="Script" id=2]
 [ext_resource path="res://fonts/Roboto-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://stats.gd" type="Script" id=4]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0 )
@@ -37,6 +38,7 @@ scale = Vector2( 1, 600 )
 texture = SubResource( 2 )
 
 [node name="Stats" type="Node2D" parent="."]
+script = ExtResource( 4 )
 
 [node name="BGLeft" type="Line2D" parent="Stats"]
 position = Vector2( 64, 300 )
