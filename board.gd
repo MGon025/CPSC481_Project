@@ -22,6 +22,5 @@ func _ready():
 
 func _clear_board():
 	for mark in marks:
-		mark.get_node("X").visible = false
-		mark.get_node("O").visible = false
+		mark.turn_off()
 
