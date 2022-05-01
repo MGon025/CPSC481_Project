@@ -1,67 +1,126 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Mark.tscn" type="PackedScene" id=1]
+[ext_resource path="res://board.gd" type="Script" id=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+width = 1024
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource( 2 )
 
-[node name="Background" type="ColorRect" parent="."]
-margin_right = 1025.0
-margin_bottom = 600.0
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 512, 300 )
+scale = Vector2( 1, 600 )
+texture = SubResource( 2 )
 
-[node name="PlayerLabel" type="Label" parent="."]
+[node name="Stats" type="Node2D" parent="."]
+
+[node name="Player1Name" type="Label" parent="Stats"]
 modulate = Color( 0, 0, 0, 1 )
 self_modulate = Color( 0, 0, 0, 1 )
 margin_right = 39.0
 margin_bottom = 14.0
 rect_scale = Vector2( 2, 2 )
 text = "Player"
+align = 1
 
-[node name="Grid" type="Node" parent="."]
+[node name="Player1Score" type="Label" parent="Stats"]
+modulate = Color( 0, 0, 0, 1 )
+self_modulate = Color( 0, 0, 0, 1 )
+margin_left = 1.0
+margin_top = 35.0
+margin_right = 40.0
+margin_bottom = 49.0
+rect_scale = Vector2( 2, 2 )
+text = "0"
+align = 1
 
-[node name="LineLeft" type="Line2D" parent="Grid"]
-points = PoolVector2Array( 347, -2, 349, 599 )
+[node name="Player2Name" type="Label" parent="Stats"]
+anchor_right = 1.0
+margin_left = 948.0
+margin_right = 986.0
+margin_bottom = 14.0
+rect_scale = Vector2( 2, 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "A.I."
+align = 1
+
+[node name="Player2Score" type="Label" parent="Stats"]
+modulate = Color( 0, 0, 0, 1 )
+self_modulate = Color( 0, 0, 0, 1 )
+margin_left = 947.0
+margin_top = 31.0
+margin_right = 986.0
+margin_bottom = 45.0
+rect_scale = Vector2( 2, 2 )
+text = "0"
+align = 1
+
+[node name="BorderLeft" type="Line2D" parent="Stats"]
+position = Vector2( 128, 300 )
+points = PoolVector2Array( 0, -300, 0, 300 )
 default_color = Color( 0, 0, 0, 1 )
+
+[node name="BorderRight" type="Line2D" parent="Stats"]
+position = Vector2( 896, 300 )
+points = PoolVector2Array( 0, -300, 0, 300 )
+default_color = Color( 0, 0, 0, 1 )
+
+[node name="Grid" type="Node2D" parent="."]
+position = Vector2( 512, 300 )
 
 [node name="LineUp" type="Line2D" parent="Grid"]
-position = Vector2( 204, 63 )
-points = PoolVector2Array( -87, 133, 626, 118 )
-default_color = Color( 0, 0, 0, 1 )
-
-[node name="LineRight" type="Line2D" parent="Grid"]
-position = Vector2( 209, 0 )
-points = PoolVector2Array( 349, 1, 349, 599 )
+position = Vector2( 0, -69 )
+points = PoolVector2Array( -202, 0, 202, 0 )
 default_color = Color( 0, 0, 0, 1 )
 
 [node name="LineDown" type="Line2D" parent="Grid"]
-position = Vector2( 203, 292 )
-points = PoolVector2Array( -93, 109, 660, 89 )
+position = Vector2( 0, 69 )
+points = PoolVector2Array( -202, 0, 202, 0 )
 default_color = Color( 0, 0, 0, 1 )
 
-[node name="Marks" type="Node" parent="."]
+[node name="LineLeft" type="Line2D" parent="Grid"]
+position = Vector2( -69, 0 )
+points = PoolVector2Array( 0, -202, 0, 202 )
+default_color = Color( 0, 0, 0, 1 )
+
+[node name="LineRight" type="Line2D" parent="Grid"]
+position = Vector2( 69, 0 )
+points = PoolVector2Array( 0, -202, 0, 202 )
+default_color = Color( 0, 0, 0, 1 )
+
+[node name="Marks" type="Node2D" parent="."]
+position = Vector2( 512, 300 )
+
+[node name="Mark0" parent="Marks" instance=ExtResource( 1 )]
+position = Vector2( -138, -238 )
 
 [node name="Mark1" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 239, -10 )
+position = Vector2( 0, -238 )
 
 [node name="Mark2" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 452, -9 )
+position = Vector2( 138, -238 )
 
 [node name="Mark3" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 689, -13 )
+position = Vector2( -138, -100 )
 
 [node name="Mark4" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 236, 199 )
+position = Vector2( 0, -100 )
 
 [node name="Mark5" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 451, 196 )
+position = Vector2( 138, -100 )
 
 [node name="Mark6" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 697, 182 )
+position = Vector2( -138, 38 )
 
 [node name="Mark7" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 238, 397 )
+position = Vector2( 0, 38 )
 
 [node name="Mark8" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 455, 394 )
-
-[node name="Mark9" parent="Marks" instance=ExtResource( 1 )]
-position = Vector2( 704, 396 )
+position = Vector2( 138, 38 )
