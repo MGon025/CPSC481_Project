@@ -47,7 +47,7 @@ func _clear_board():
 	for tile in tiles:
 		tile.turn_off()
 	for child in $WinLines.get_children():
-		$WinLines.remove_child(child)
+		child.hide()
 
 
 func _game_won(player1: bool):
@@ -67,7 +67,7 @@ func _draw_win_line(player1: bool, begin: int, end: int):
 	var color = player1bg.get_default_color() if player1\
 			else player2bg.get_default_color()
 	win_line.set_default_color(color)
-	$WinLines.add_child(win_line)
+	win_line.show()
 
 
 # store all tile nodes. called once

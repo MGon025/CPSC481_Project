@@ -1,10 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Tile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://board.gd" type="Script" id=2]
 [ext_resource path="res://fonts/Roboto-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://stats.gd" type="Script" id=4]
-[ext_resource path="res://win_line.gd" type="Script" id=5]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0 )
@@ -160,46 +159,38 @@ position = Vector2( 138, 38 )
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, -202, 202, 202 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line62" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 202, 202, -202 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line02" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 162 )
 points = PoolVector2Array( -202, 0, 202, 0 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line35" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 0, 202, 0 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line68" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 438 )
 points = PoolVector2Array( -202, 0, 202, 0 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line06" type="Line2D" parent="WinLines"]
 position = Vector2( 374, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line17" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
 
 [node name="Line28" type="Line2D" parent="WinLines"]
 position = Vector2( 650, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
 default_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 5 )
