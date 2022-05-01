@@ -44,7 +44,7 @@ align = 1
 [node name="Player2Name" type="Label" parent="Stats"]
 anchor_right = 1.0
 margin_left = 948.0
-margin_right = -39.0
+margin_right = 986.0
 margin_bottom = 14.0
 rect_scale = Vector2( 2, 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
