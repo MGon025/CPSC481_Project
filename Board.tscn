@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Tile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://board.gd" type="Script" id=2]
@@ -27,6 +27,14 @@ font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=6]
 size = 60
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 40
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 40
 font_data = ExtResource( 3 )
 
 [node name="Board" type="Node2D"]
@@ -158,39 +166,73 @@ position = Vector2( 138, 38 )
 [node name="Line08" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, -202, 202, 202 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line62" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 202, 202, -202 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line02" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 162 )
 points = PoolVector2Array( -202, 0, 202, 0 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line35" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 0, 202, 0 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line68" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 438 )
 points = PoolVector2Array( -202, 0, 202, 0 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line06" type="Line2D" parent="WinLines"]
 position = Vector2( 374, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line17" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line28" type="Line2D" parent="WinLines"]
 position = Vector2( 650, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
+width = 5.0
 default_color = Color( 1, 1, 1, 1 )
+
+[node name="Pause" type="Node2D" parent="."]
+
+[node name="How" type="Label" parent="Pause"]
+margin_top = 500.0
+margin_right = 1024.0
+margin_bottom = 600.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 7 )
+text = "Left-click to continue"
+align = 1
+valign = 1
+
+[node name="Who" type="Label" parent="Pause"]
+margin_right = 1024.0
+margin_bottom = 100.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Player Wins"
+align = 1
+valign = 1
+
+[node name="Click" type="ColorRect" parent="Pause"]
+margin_right = 1024.0
+margin_bottom = 600.0
+color = Color( 1, 1, 1, 0 )

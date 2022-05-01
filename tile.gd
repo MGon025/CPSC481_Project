@@ -36,6 +36,7 @@ func turn_on(circle: bool):
 func turn_off():
 	get_node("O").visible = false
 	get_node("X").visible = false
+	enabled = true
 
 
 func toggle_tile():

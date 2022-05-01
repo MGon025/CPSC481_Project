@@ -11,12 +11,16 @@ var player1_is_first = true
 var use_circle = true
 
 var _win_lines = []
+var _pause = null
 
 onready var player1bg = get_node("Stats/BGLeft")
 onready var player2bg = get_node("Stats/BGRight")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# warning-ignore:return_value_discarded
+	$Pause/Click.connect("gui_input", self, "_on_continue")
+	$Pause.hide()
 	# reset marking colors
 	$Tiles.modulate = Color.white
 
@@ -31,16 +35,22 @@ func _ready():
 		_test_ai_click()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-# called when a tile is clicked
+# Called when a tile is clicked
 func _on_turn_end():
 	use_circle = !use_circle
 	player1bg.visible = !player1bg.visible
 	player2bg.visible = !player2bg.visible
+	# _test_win(false)
+
+
+# Called when clicking after a game is finished.
+# Make sure to set _pause to _game_over()
+func _on_continue(event):
+	if not (event is InputEventMouseButton) or\
+			event.get_button_index() != BUTTON_LEFT or\
+			not event.is_pressed():
+		return
+	_pause.resume()
 
 
 func _clear_board():
@@ -50,9 +60,14 @@ func _clear_board():
 		child.hide()
 
 
-func _game_won(player1: bool):
+func _game_won(player1: bool, begin: int, end: int):
 	$Stats.add_score(player1)
-	#TODO: wait several seconds or for player to click
+	_draw_win_line(player1, begin, end)
+	var text = $Stats/Player1Name.text if player1 else $Stats/Player2Name.text
+	$Pause/Who.text = text + " Wins!"
+	$Pause.show()
+	yield()
+	$Pause.hide()
 	_clear_board()
 
 
@@ -95,3 +110,8 @@ func _get_win_lines():
 # example of how the ai would click tile 1
 func _test_ai_click():
 	tiles[1].toggle_tile()
+
+
+# example of the player winning with tiles 0,4,8
+func _test_win(player1: bool):
+	_pause = _game_won(player1, 0, 8)
