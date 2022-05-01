@@ -38,27 +38,27 @@ texture = SubResource( 2 )
 
 [node name="Stats" type="Node2D" parent="."]
 
-[node name="BorderLeft" type="Line2D" parent="Stats"]
-position = Vector2( 128, 300 )
-points = PoolVector2Array( 0, -300, 0, 300 )
-default_color = Color( 0, 0, 0, 1 )
-
 [node name="BGLeft" type="Line2D" parent="Stats"]
 position = Vector2( 64, 300 )
 points = PoolVector2Array( 0, -300, 0, 300 )
 width = 128.0
 default_color = Color( 0, 1, 1, 1 )
 
-[node name="BorderRight" type="Line2D" parent="Stats"]
-position = Vector2( 896, 300 )
-points = PoolVector2Array( 0, -300, 0, 300 )
-default_color = Color( 0, 0, 0, 1 )
-
 [node name="BGRight" type="Line2D" parent="Stats"]
 position = Vector2( 960, 300 )
 points = PoolVector2Array( 0, -300, 0, 300 )
 width = 128.0
 default_color = Color( 1, 0, 0, 1 )
+
+[node name="BorderLeft" type="Line2D" parent="Stats"]
+position = Vector2( 128, 300 )
+points = PoolVector2Array( 0, -300, 0, 300 )
+default_color = Color( 0, 0, 0, 1 )
+
+[node name="BorderRight" type="Line2D" parent="Stats"]
+position = Vector2( 896, 300 )
+points = PoolVector2Array( 0, -300, 0, 300 )
+default_color = Color( 0, 0, 0, 1 )
 
 [node name="Player1Name" type="Label" parent="Stats"]
 margin_right = 123.0
