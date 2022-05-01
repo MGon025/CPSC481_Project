@@ -17,10 +17,11 @@ func _ready():
 
 
 func _input(event):
-	# forget that a tile was selected if mouse is released outside of the tile
-	if not (event is InputEventMouseButton):
+	# forget that a tile was selected if mouse clicked outside of the tile
+	if not (event is InputEventMouseButton) or\
+			 event.get_button_index() != BUTTON_LEFT:
 		return
-	if not event.is_pressed() and _click_saved:
+	if _click_saved:
 		_click_saved = false
 
 
@@ -39,6 +40,7 @@ func turn_off():
 # called when a tile is left-clicked
 func _on_click(_viewport, event, _shape_idx):
 	if not (event is InputEventMouseButton) or\
+			event.get_button_index() != BUTTON_LEFT or\
 			not enabled:
 		return
 	if event.is_pressed():
