@@ -36,12 +36,41 @@ func _ready():
 #	pass
 
 
+# called when a tile is clicked
+func _on_turn_end():
+	use_circle = !use_circle
+	player1bg.visible = !player1bg.visible
+	player2bg.visible = !player2bg.visible
+
+
 func _clear_board():
 	for tile in tiles:
 		tile.turn_off()
+	for child in $WinLines.get_children():
+		$WinLines.remove_child(child)
 
 
-# store all tile nodes
+func _game_won(player1: bool):
+	$Stats.add_score(player1)
+	#TODO: wait several seconds or for player to click
+	_clear_board()
+
+
+func _draw_win_line(player1: bool, begin: int, end: int):
+	var win_line = null
+	for line in _win_lines:
+		if line.name == ("Line" + str(begin) + str(end)):
+			win_line = line
+	if not win_line:
+		print("win line " + str(begin) + str(end) + " does not exist")
+		return
+	var color = player1bg.get_default_color() if player1\
+			else player2bg.get_default_color()
+	win_line.set_default_color(color)
+	$WinLines.add_child(win_line)
+
+
+# store all tile nodes. called once
 func _get_tile_nodes():
 	for i in range(9):
 		var path = "Tiles/Tile" + str(i)
@@ -57,40 +86,10 @@ func _get_tile_nodes():
 		tiles.append(tile)
 
 
-# called when a tile is clicked
-func _on_turn_end():
-	use_circle = !use_circle
-	player1bg.visible = !player1bg.visible
-	player2bg.visible = !player2bg.visible
-	# _draw_win_line(true, 0, 8)
-
-
-func _game_won(player1: bool):
-	#TODO: play win animation
-	# yield(animation, end)
-	$Stats.add_score(player1)
-	#TODO: wait several seconds of for player to click
-	_clear_board()
-
-
-func _draw_win_line(player1: bool, begin: int, end: int):
-	var win_line = null
-	for line in _win_lines:
-		if line.name == ("Line" + str(begin) + str(end)):
-			win_line = line
-	if not win_line:
-		print("win line " + str(begin) + str(end) + " does not exist")
-		return
-	var color = player1bg.get_default_color() if player1\
-			else player2bg.get_default_color()
-	win_line.set_default_color(color)
-	add_child_below_node($WinLines, win_line)
-
-
+# store all win line nodes. called once
 func _get_win_lines():
 	for node in $WinLines.get_children():
 		_win_lines.append(node)
-		$WinLines.remove_child(node)
 
 
 # example of how the ai would click tile 1
