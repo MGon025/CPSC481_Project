@@ -1,11 +1,11 @@
 extends Area2D
 
-signal mark_clicked
+signal tile_clicked
 
 var enabled = true
 var _selected = false
 var _click_saved = false
-onready var board = get_node("../..")
+onready var _board = get_node("../..")
 
 
 func _ready():
@@ -38,10 +38,10 @@ func turn_off():
 	get_node("X").visible = false
 
 
-func toggle_mark():
+func toggle_tile():
 	enabled = false
-	turn_on(board.use_circle)
-	emit_signal("mark_clicked")
+	turn_on(_board.use_circle)
+	emit_signal("tile_clicked")
 	print(self.name + " clicked & disabled!")
 
 
@@ -56,7 +56,7 @@ func _on_click(_viewport, event, _shape_idx):
 		return
 	elif _selected:
 		_selected = false
-		toggle_mark()
+		toggle_tile()
 
 
 func _on_mouse_exit():
