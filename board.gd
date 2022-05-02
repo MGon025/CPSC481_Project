@@ -1,24 +1,24 @@
 extends Node2D
+# Handles various events related to the game board.
+# Events include setting up the game board, switching turns,
+# and displaying the winner.
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
 var tiles = []
 
-var player1_is_first = true
-var player1_turn = true
+var player1_turn = false
 var use_circle = true
 
 var _win_lines = []
 var _pause = null
 
-onready var player1bg = get_node("Stats/BGLeft")
-onready var player2bg = get_node("Stats/BGRight")
-onready var p1_name = get_node("Stats/Names/Player1Name")
-onready var p2_name = get_node("Stats/Names/Player2Name")
+onready var _player1bg = get_node("Stats/BGLeft")
+onready var _player2bg = get_node("Stats/BGRight")
+onready var _p1_name = get_node("Stats/Names/Player1Name")
+onready var _p2_name = get_node("Stats/Names/Player2Name")
 var _test_time = 0
+var _test_count = 0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,23 +31,22 @@ func _ready():
 	_clear_board()
 
 
-# called 60 times per second
+# Called at 60fps. delta is time between frames.
 func _physics_process(delta):
 	_test_ai(delta)
+#	pass
 
 
 # Called when a tile is clicked
 func _on_turn_end():
 	use_circle = !use_circle
-	player1bg.visible = !player1bg.visible
-	player2bg.visible = !player2bg.visible
+	_player1bg.visible = !_player1bg.visible
+	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
-	_test_time = 0
-	# _test_win(false)
+	_test_win()
 
 
 # Called when clicking after a game is finished.
-# Make sure to set _pause to _game_over()
 func _on_continue(event):
 	if not (event is InputEventMouseButton) or\
 			event.get_button_index() != BUTTON_LEFT or\
@@ -60,18 +59,17 @@ func _on_continue(event):
 func _on_game_start(player1: bool):
 	_set_tile_colors(player1)
 	player1_turn = player1
-	player1_is_first = player1
-	if player1_is_first:
-		player1bg.show()
-		p2_name.show()
+	if player1:
+		_player1bg.show()
+		_p2_name.show()
 	else:
 		player1_turn = false
-		player2bg.show()
-		p1_name.show()
+		_player2bg.show()
+		_p1_name.show()
 	$Stats/Player1Score.show()
 	$Stats/Player2Score.show()
-	_test_time = 0
 	$GameStart.hide()
+	_test_time = 0
 
 
 func _clear_board():
@@ -81,10 +79,12 @@ func _clear_board():
 		child.hide()
 
 
+# Call this when someone has won.
+# Make sure to set _pause to _game_won() when calling this function.
 func _game_won(player1: bool, begin: int, end: int):
 	$Stats.add_score(player1)
 	_draw_win_line(player1, begin, end)
-	var text = p1_name.text if player1 else p2_name.text
+	var text = _p1_name.text if player1 else _p2_name.text
 	$Pause/Who.text = text + " Wins!"
 	$Pause.show()
 	yield()
@@ -92,6 +92,7 @@ func _game_won(player1: bool, begin: int, end: int):
 	_clear_board()
 
 
+# draws the win line according to the given beginning and end tiles
 func _draw_win_line(player1: bool, begin: int, end: int):
 	var win_line = null
 	for line in _win_lines:
@@ -100,8 +101,8 @@ func _draw_win_line(player1: bool, begin: int, end: int):
 	if not win_line:
 		print("win line " + str(begin) + str(end) + " does not exist")
 		return
-	var color = player1bg.get_default_color() if player1\
-			else player2bg.get_default_color()
+	var color = _player1bg.get_default_color() if player1\
+			else _player2bg.get_default_color()
 	win_line.set_default_color(color)
 	win_line.show()
 
@@ -115,13 +116,14 @@ func _get_tile_nodes():
 		tiles.append(tile)
 
 
+# sets tile colors to BGLeft and BGRight depending on who goes first
 func _set_tile_colors(player1: bool):
 	# set tile colors based on player background colors
 	for tile in tiles:
-		tile.get_node("O").modulate = player1bg.get_default_color() if\
-				player1 else player2bg.get_default_color()
-		tile.get_node("X").modulate = player2bg.get_default_color() if\
-				player1 else player1bg.get_default_color()
+		tile.get_node("O").modulate = _player1bg.get_default_color() if\
+				player1 else _player2bg.get_default_color()
+		tile.get_node("X").modulate = _player2bg.get_default_color() if\
+				player1 else _player1bg.get_default_color()
 
 
 # store all win line nodes. called once
@@ -130,6 +132,7 @@ func _get_win_lines():
 		_win_lines.append(node)
 
 
+# connects signals from other scripts/nodes to their appropriate functions
 func _connect_signals():
 	# warning-ignore:return_value_discarded
 	$Pause/Click.connect("gui_input", self, "_on_continue")
@@ -140,9 +143,10 @@ func _connect_signals():
 # example of how the ai would click tile 1
 func _test_ai_click():
 	tiles[1].toggle_tile()
+	_test_count += 1
 
 
-# example of ai making a decision after 5 seconds
+# example of the ai making a decision after 5 seconds
 func _test_ai(delta):
 	_test_time += delta
 	if not player1_turn:
@@ -153,5 +157,9 @@ func _test_ai(delta):
 
 
 # example of the player winning with tiles 0,4,8
-func _test_win(player1: bool):
-	_pause = _game_won(player1, 0, 8)
+# called when switching turns after 3 enemy actions
+func _test_win():
+	_test_time = 0
+	if _test_count == 3:
+		_pause = _game_won(true, 0, 8)
+		_test_count = 0

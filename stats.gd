@@ -1,16 +1,13 @@
 extends Node2D
-
-onready var p1_score = get_node("Player1Score")
-onready var p2_score = get_node("Player2Score")
+# Controls the scores of both players
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass
+onready var _p1_score = get_node("Player1Score")
+onready var _p2_score = get_node("Player2Score")
 
 
 func add_score(player1: bool):
 	if player1:
-		p1_score.text = str(int(p1_score.text) + 1)
+		_p1_score.text = str(int(_p1_score.text) + 1)
 	else:
-		p2_score.text = str(int(p2_score.text) + 1)
+		_p2_score.text = str(int(_p2_score.text) + 1)

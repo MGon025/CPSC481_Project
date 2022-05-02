@@ -1,4 +1,9 @@
 extends Area2D
+# Handles how the tiles are used.
+# A user can left-click to use a tile. The tile will only be used upon
+# releasing the mouse button on the same tile that the button was pressed on.
+# toggle_tile() is also available for AIs to simulate clicking.
+
 
 signal tile_clicked
 
@@ -26,11 +31,11 @@ func _input(event):
 		_click_saved = false
 
 
-func turn_on(circle: bool):
-	if circle:
-		get_node("O").visible = true
-	else:
-		get_node("X").visible = true
+func toggle_tile():
+	enabled = false
+	_turn_on(_board.use_circle)
+	emit_signal("tile_clicked")
+	print(self.name + " clicked & disabled!")
 
 
 func turn_off():
@@ -39,11 +44,11 @@ func turn_off():
 	enabled = true
 
 
-func toggle_tile():
-	enabled = false
-	turn_on(_board.use_circle)
-	emit_signal("tile_clicked")
-	print(self.name + " clicked & disabled!")
+func _turn_on(circle: bool):
+	if circle:
+		get_node("O").visible = true
+	else:
+		get_node("X").visible = true
 
 
 # called when a tile is left-clicked
