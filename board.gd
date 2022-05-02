@@ -8,6 +8,7 @@ extends Node2D
 var tiles = []
 
 var player1_is_first = true
+var player1_turn = true
 var use_circle = true
 
 var _win_lines = []
@@ -15,6 +16,7 @@ var _pause = null
 
 onready var player1bg = get_node("Stats/BGLeft")
 onready var player2bg = get_node("Stats/BGRight")
+var _test_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,8 +33,13 @@ func _ready():
 	if player1_is_first:
 		player2bg.visible = false
 	else:
+		player1_turn = false
 		player1bg.visible = false
 		_test_ai_click()
+
+
+func _physics_process(delta):
+	_test_ai(delta)
 
 
 # Called when a tile is clicked
@@ -40,6 +47,8 @@ func _on_turn_end():
 	use_circle = !use_circle
 	player1bg.visible = !player1bg.visible
 	player2bg.visible = !player2bg.visible
+	player1_turn = !player1_turn
+	_test_time = 0
 	# _test_win(false)
 
 
@@ -110,6 +119,16 @@ func _get_win_lines():
 # example of how the ai would click tile 1
 func _test_ai_click():
 	tiles[1].toggle_tile()
+
+
+# example of ai making a decision after 5 seconds
+func _test_ai(delta):
+	_test_time += delta
+	if not player1_turn:
+		if _test_time >= 5:
+			_test_ai_click()
+		else:
+			print("waiting... " + str(_test_time))
 
 
 # example of the player winning with tiles 0,4,8
