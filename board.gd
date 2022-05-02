@@ -5,17 +5,18 @@ extends Node2D
 
 
 var tiles = []
-
 var player1_turn = false
 var use_circle = true
-
 var _win_lines = []
+
+# used to store yield state of _game_won()
 var _pause = null
 
 onready var _player1bg = get_node("Stats/BGLeft")
 onready var _player2bg = get_node("Stats/BGRight")
 onready var _p1_name = get_node("Stats/Names/Player1Name")
 onready var _p2_name = get_node("Stats/Names/Player2Name")
+# For testing. Remove or comment later
 var _test_time = 0
 var _test_count = 0
 
@@ -33,7 +34,8 @@ func _ready():
 
 # Called at 60fps. delta is time between frames.
 func _physics_process(delta):
-	if _player2bg.visible:
+	# For testing. Remove or comment when AI can make their own decisions.
+	if _player2bg.visible and not $Pause.visible:
 		_test_ai(delta)
 #	pass
 
@@ -44,6 +46,7 @@ func _on_turn_end():
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
+	# For testing. Remove or comment later
 	_test_win()
 
 
@@ -60,16 +63,20 @@ func _on_continue(event):
 func _on_game_start(player1: bool):
 	_set_tile_colors(player1)
 	player1_turn = player1
+
+	# Set up Stats nodes
 	if player1:
 		_player1bg.show()
 		_p2_name.show()
 	else:
-		player1_turn = false
 		_player2bg.show()
 		_p1_name.show()
 	$Stats/Player1Score.show()
 	$Stats/Player2Score.show()
+
+	# Hide start menu
 	$GameStart.hide()
+	# For testing. Remove or comment later
 	_test_time = 0
 
 
@@ -85,10 +92,16 @@ func _clear_board():
 func _game_won(player1: bool, begin: int, end: int):
 	$Stats.add_score(player1)
 	_draw_win_line(player1, begin, end)
+
+	# display winner's name
 	var text = _p1_name.text if player1 else _p2_name.text
 	$Pause/Who.text = text + " Wins!"
 	$Pause.show()
+
+	# wait for the player to click the screen
 	yield()
+
+	# reset board
 	$Pause.hide()
 	_clear_board()
 
@@ -141,17 +154,12 @@ func _connect_signals():
 	$GameStart.connect("turn_decided", self, "_on_game_start")
 
 
-# example of how the ai would click tile 1
-func _test_ai_click():
-	tiles[1].toggle_tile()
-	_test_count += 1
-
-
-# example of the ai making a decision after 5 seconds
+# example of the ai clicking tile 1 after 5 seconds
 func _test_ai(delta):
 	_test_time += delta
 	if _test_time >= 5:
-		_test_ai_click()
+		tiles[1].toggle_tile()
+		_test_count += 1
 	else:
 		print("waiting... " + str(_test_time))
 
@@ -161,5 +169,5 @@ func _test_ai(delta):
 func _test_win():
 	_test_time = 0
 	if _test_count == 3:
-		_pause = _game_won(true, 0, 8)
+		_pause = _game_won(false, 0, 8)
 		_test_count = 0

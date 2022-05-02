@@ -279,3 +279,5 @@ anims/swipe_left = SubResource( 11 )
 [node name="Timer" type="Timer" parent="GameStart"]
 wait_time = 3.0
 one_shot = true
+
+[node name="DotTimer" type="Timer" parent="GameStart"]

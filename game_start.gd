@@ -16,22 +16,16 @@ onready var _p2_name = get_node("../Stats/Names/Player2Name")
 func _ready():
 	_p1_name.hide()
 	_p2_name.hide()
+	$Dots.text = ""
+	# warning-ignore:return_value_discarded
+	$DotTimer.connect("timeout", self, "_on_dots_timeout")
 	$Timer.start(4.0)
-	_start_dots()
+	$DotTimer.start()
 	yield($Timer, "timeout")
 	_decide()
 
 
-func _start_dots():
-	$Dots.text = ""
-	var timer = Timer.new()
-	add_child(timer)
-	timer.connect("timeout", self, "_on_timer_timeout")
-	timer.set_one_shot(false)
-	timer.start(1.0)
-
-
-func _on_timer_timeout():
+func _on_dots_timeout():
 	if len($Dots.text) < 3:
 		$Dots.text += "."
 
