@@ -193,49 +193,41 @@ position = Vector2( 138, 38 )
 [node name="Line08" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, -202, 202, 202 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line62" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 202, 202, -202 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line02" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 162 )
 points = PoolVector2Array( -202, 0, 202, 0 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line35" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( -202, 0, 202, 0 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line68" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 438 )
 points = PoolVector2Array( -202, 0, 202, 0 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line06" type="Line2D" parent="WinLines"]
 position = Vector2( 374, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line17" type="Line2D" parent="WinLines"]
 position = Vector2( 512, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line28" type="Line2D" parent="WinLines"]
 position = Vector2( 650, 300 )
 points = PoolVector2Array( 0, -202, 0, 202 )
-width = 5.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Pause" type="Node2D" parent="."]
