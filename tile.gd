@@ -36,6 +36,7 @@ func turn_on(circle: bool):
 func turn_off():
 	get_node("O").visible = false
 	get_node("X").visible = false
+	enabled = true
 
 
 func toggle_tile():
@@ -49,6 +50,7 @@ func toggle_tile():
 func _on_click(_viewport, event, _shape_idx):
 	if not (event is InputEventMouseButton) or\
 			event.get_button_index() != BUTTON_LEFT or\
+			not _board.player1_turn or\
 			not enabled:
 		return
 	if event.is_pressed():
