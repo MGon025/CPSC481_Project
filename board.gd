@@ -48,6 +48,7 @@ func _on_turn_end():
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
+	_check_win()
 	_move_ai()
 	# For testing. Remove or comment later
 	# _test_win()
@@ -185,6 +186,11 @@ func _move_ai():
 		var best_move = yield(find_best_move(tiles, -1), "completed")
 		tiles[best_move].toggle_tile()
 
+
+func _check_win():
+	# if the winner is decided, find the win line then display it
+	# _pause = _game_won(true if player won else false, upper/leftmost tile index, lower/rightmost tile index)
+	pass
 
 func make_duplicate(board):
 	var duplicate = ["_", "_", "_","_","_","_","_","_","_"]
