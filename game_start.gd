@@ -21,6 +21,7 @@ func _ready():
 	yield($Timer, "timeout")
 	_decide()
 
+
 func _start_dots():
 	$Dots.text = ""
 	var timer = Timer.new()
