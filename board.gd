@@ -16,28 +16,22 @@ var _pause = null
 
 onready var player1bg = get_node("Stats/BGLeft")
 onready var player2bg = get_node("Stats/BGRight")
+onready var p1_name = get_node("Stats/Names/Player1Name")
+onready var p2_name = get_node("Stats/Names/Player2Name")
 var _test_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# warning-ignore:return_value_discarded
-	$Pause/Click.connect("gui_input", self, "_on_continue")
 	$Pause.hide()
 	# reset marking colors
 	$Tiles.modulate = Color.white
-
+	_connect_signals()
 	_get_tile_nodes()
 	_get_win_lines()
 	_clear_board()
 
-	if player1_is_first:
-		player2bg.visible = false
-	else:
-		player1_turn = false
-		player1bg.visible = false
-		_test_ai_click()
 
-
+# called 60 times per second
 func _physics_process(delta):
 	_test_ai(delta)
 
@@ -62,6 +56,24 @@ func _on_continue(event):
 	_pause.resume()
 
 
+# Called after the first player is decided
+func _on_game_start(player1: bool):
+	_set_tile_colors(player1)
+	player1_turn = player1
+	player1_is_first = player1
+	if player1_is_first:
+		player1bg.show()
+		p2_name.show()
+	else:
+		player1_turn = false
+		player2bg.show()
+		p1_name.show()
+	$Stats/Player1Score.show()
+	$Stats/Player2Score.show()
+	_test_time = 0
+	$GameStart.hide()
+
+
 func _clear_board():
 	for tile in tiles:
 		tile.turn_off()
@@ -72,7 +84,7 @@ func _clear_board():
 func _game_won(player1: bool, begin: int, end: int):
 	$Stats.add_score(player1)
 	_draw_win_line(player1, begin, end)
-	var text = $Stats/Player1Name.text if player1 else $Stats/Player2Name.text
+	var text = p1_name.text if player1 else p2_name.text
 	$Pause/Who.text = text + " Wins!"
 	$Pause.show()
 	yield()
@@ -99,21 +111,30 @@ func _get_tile_nodes():
 	for i in range(9):
 		var path = "Tiles/Tile" + str(i)
 		var tile = get_node(path)
-
-		# set tile colors based on player background colors
-		tile.get_node("O").modulate = player1bg.get_default_color() if\
-				player1_is_first else player2bg.get_default_color()
-		tile.get_node("X").modulate = player2bg.get_default_color() if\
-				player1_is_first else player1bg.get_default_color()
-
 		tile.connect("tile_clicked", self, "_on_turn_end")
 		tiles.append(tile)
+
+
+func _set_tile_colors(player1: bool):
+	# set tile colors based on player background colors
+	for tile in tiles:
+		tile.get_node("O").modulate = player1bg.get_default_color() if\
+				player1 else player2bg.get_default_color()
+		tile.get_node("X").modulate = player2bg.get_default_color() if\
+				player1 else player1bg.get_default_color()
 
 
 # store all win line nodes. called once
 func _get_win_lines():
 	for node in $WinLines.get_children():
 		_win_lines.append(node)
+
+
+func _connect_signals():
+	# warning-ignore:return_value_discarded
+	$Pause/Click.connect("gui_input", self, "_on_continue")
+	# warning-ignore:return_value_discarded
+	$GameStart.connect("turn_decided", self, "_on_game_start")
 
 
 # example of how the ai would click tile 1
