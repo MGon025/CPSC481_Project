@@ -33,7 +33,8 @@ func _ready():
 
 # Called at 60fps. delta is time between frames.
 func _physics_process(delta):
-	_test_ai(delta)
+	if _player2bg.visible:
+		_test_ai(delta)
 #	pass
 
 
@@ -149,11 +150,10 @@ func _test_ai_click():
 # example of the ai making a decision after 5 seconds
 func _test_ai(delta):
 	_test_time += delta
-	if not player1_turn:
-		if _test_time >= 5:
-			_test_ai_click()
-		else:
-			print("waiting... " + str(_test_time))
+	if _test_time >= 5:
+		_test_ai_click()
+	else:
+		print("waiting... " + str(_test_time))
 
 
 # example of the player winning with tiles 0,4,8
