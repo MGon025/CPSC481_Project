@@ -12,8 +12,8 @@ config_version=4
 
 config/name="tictactoe"
 run/main_scene="res://Board.tscn"
-config/icon="res://icon.png"
-config/windows_native_icon="res://icon.ico"
+config/icon="res://icon2.png"
+config/windows_native_icon="res://icon2.ico"
 
 [debug]
 
