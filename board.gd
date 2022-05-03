@@ -17,8 +17,8 @@ onready var _player2bg = get_node("Stats/BGRight")
 onready var _p1_name = get_node("Stats/Names/Player1Name")
 onready var _p2_name = get_node("Stats/Names/Player2Name")
 # For testing. Remove or comment later
-var _test_time = 0
-var _test_count = 0
+#var _test_time = 0
+#var _test_count = 0
 
 
 
@@ -35,10 +35,10 @@ func _ready():
 
 
 # Called at 60fps. delta is time between frames.
-func _physics_process(delta):
-	# For testing. Remove or comment when AI can make their own decisions
-	if _player2bg.visible and not $Pause.visible:
-		_test_ai(delta)
+#func _physics_process(delta):
+#	# For testing. Remove or comment when AI can make their own decisions
+#	# if _player2bg.visible and not $Pause.visible:
+#	# 	_test_ai(delta)
 #	pass
 
 
@@ -48,8 +48,10 @@ func _on_turn_end():
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
+	_check_win()
+	_move_ai()
 	# For testing. Remove or comment later
-	_test_win()
+	# _test_win()
 
 
 # Called when clicking after a game is finished.
@@ -78,8 +80,9 @@ func _on_game_start(player1: bool):
 
 	# Hide start menu
 	$GameStart.hide()
+	_move_ai()
 	# For testing. Remove or comment later
-	_test_time = 0
+#	_test_time = 0
 
 
 func _clear_board():
@@ -157,29 +160,38 @@ func _connect_signals():
 
 
 # example of the ai clicking tile 1 after 5 seconds
-func _test_ai(delta):
-	_test_time += delta
-	#var best_move = find_best_move(tiles,-1)
-	var best_move = find_best_move(tiles,-1)
-	if _test_time >= 1:
-		tiles[best_move].toggle_tile()
-		_test_count += 1
-	else:
-		#print("waiting... " + str(_test_time))
-		pass
+#func _test_ai(delta):
+#	_test_time += delta
+#	#var best_move = find_best_move(tiles,-1)
+#	var best_move = find_best_move(tiles,-1)
+#	if _test_time >= 1:
+#		tiles[best_move].toggle_tile()
+#		_test_count += 1
+#	else:
+#		#print("waiting... " + str(_test_time))
+#		pass
 
 
 # example of the player winning with tiles 0,4,8
 # called when switching turns after 3 enemy actions
-func _test_win():
-	_test_time = 0
-	if _test_count == 3:
-		_pause = _game_won(false, 0, 8)
-		_test_count = 0
-		
-		
-		
-		
+#func _test_win():
+#	_test_time = 0
+#	if _test_count == 3:
+#		_pause = _game_won(false, 0, 8)
+#		_test_count = 0
+
+
+func _move_ai():
+	if not player1_turn:
+		var best_move = yield(find_best_move(tiles, -1), "completed")
+		tiles[best_move].toggle_tile()
+
+
+func _check_win():
+	# if the winner is decided, find the win line then display it
+	# _pause = _game_won(true if player won else false, upper/leftmost tile index, lower/rightmost tile index)
+	pass
+
 func make_duplicate(board):
 	var duplicate = ["_", "_", "_","_","_","_","_","_","_"]
 	for i in tiles.size():
@@ -264,8 +276,10 @@ func find_best_move(board,depth):
 			board_choice.append(move)
 	if board_choice.size() > 0:
 		var random:int = randi() % board_choice.size()
+		yield(get_tree(), "idle_frame")
 		return board_choice[random]
 	else:
 		var random:int = randi() % available.size()
+		yield(get_tree(), "idle_frame")
 		return available[random]
 		
