@@ -72,6 +72,8 @@ func _on_game_start(player1: bool):
 
 	# Hide start menu
 	$GameStart.hide()
+	p1_str = "O" if player1_turn else "X"
+	p2_str = "O" if not player1_turn else "X"
 	_move_ai()
 
 
