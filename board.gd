@@ -48,7 +48,7 @@ func _on_turn_end():
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
-	_check_win()
+	yield(_check_win(), "completed")
 	_move_ai()
 	# For testing. Remove or comment later
 	# _test_win()
@@ -109,6 +109,16 @@ func _game_won(player1: bool, begin: int, end: int):
 	# reset board
 	$Pause.hide()
 	_clear_board()
+	_move_ai()
+
+
+func _game_draw():
+	$Pause/Who.text = "Draw!"
+	$Pause.show()
+	yield()
+	$Pause.hide()
+	_clear_board()
+	_move_ai()
 
 
 # draws the win line according to the given beginning and end tiles
@@ -182,47 +192,34 @@ func _connect_signals():
 
 
 func _move_ai():
-	if not player1_turn:
+	if not player1_turn and not $Pause.visible:
 		var best_move = yield(find_best_move(tiles, -1), "completed")
+		$GameStart/Timer.start(1.0)
+		yield($GameStart/Timer, "timeout")
 		tiles[best_move].toggle_tile()
 
 
 func _check_win():
 	var current_board = make_duplicate(tiles)
-	if(!player1_turn == true):
-		if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
-			_pause = _game_won(!player1_turn,0,2)
-		elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
-			_pause = _game_won(!player1_turn,3,5)
-		elif(current_board[6] == current_board[7] and current_board[7] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(!player1_turn,6,8)
-		elif(current_board[0] == current_board[3] and current_board[3] == current_board[6] and current_board[6] != "_"):
-			_pause = _game_won(!player1_turn,0,6)
-		elif(current_board[1] == current_board[4] and current_board[4] == current_board[7] and current_board[7] != "_"):
-			_pause = _game_won(!player1_turn,1,7)
-		elif(current_board[2] == current_board[5] and current_board[5] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(!player1_turn,2,8)
-		elif(current_board[0] == current_board[4] and current_board[4] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(!player1_turn,0,8)
-		elif(current_board[2] == current_board[4] and current_board[4] == current_board[6] and current_board[6] != "_"):
-			_pause = _game_won(!player1_turn,6,2)
-	elif(!player1_turn == false):
-		if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
-			_pause = _game_won(player1_turn,0,2)
-		elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
-			_pause = _game_won(player1_turn,3,5)
-		elif(current_board[6] == current_board[7] and current_board[7] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(player1_turn,6,8)
-		elif(current_board[0] == current_board[3] and current_board[3] == current_board[6] and current_board[6] != "_"):
-			_pause = _game_won(player1_turn,0,6)
-		elif(current_board[1] == current_board[4] and current_board[4] == current_board[7] and current_board[7] != "_"):
-			_pause = _game_won(player1_turn,1,7)
-		elif(current_board[2] == current_board[5] and current_board[5] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(player1_turn,2,8)
-		elif(current_board[0] == current_board[4] and current_board[4] == current_board[8] and current_board[8] != "_"):
-			_pause = _game_won(player1_turn,0,8)
-		elif(current_board[2] == current_board[4] and current_board[4] == current_board[6] and current_board[6] != "_"):
-			_pause = _game_won(player1_turn,6,2) 
+	if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
+		_pause = _game_won(!player1_turn,0,2)
+	elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
+		_pause = _game_won(!player1_turn,3,5)
+	elif(current_board[6] == current_board[7] and current_board[7] == current_board[8] and current_board[8] != "_"):
+		_pause = _game_won(!player1_turn,6,8)
+	elif(current_board[0] == current_board[3] and current_board[3] == current_board[6] and current_board[6] != "_"):
+		_pause = _game_won(!player1_turn,0,6)
+	elif(current_board[1] == current_board[4] and current_board[4] == current_board[7] and current_board[7] != "_"):
+		_pause = _game_won(!player1_turn,1,7)
+	elif(current_board[2] == current_board[5] and current_board[5] == current_board[8] and current_board[8] != "_"):
+		_pause = _game_won(!player1_turn,2,8)
+	elif(current_board[0] == current_board[4] and current_board[4] == current_board[8] and current_board[8] != "_"):
+		_pause = _game_won(!player1_turn,0,8)
+	elif(current_board[2] == current_board[4] and current_board[4] == current_board[6] and current_board[6] != "_"):
+		_pause = _game_won(!player1_turn,6,2)
+	elif current_board.count("_") == 0:
+		_pause = _game_draw()
+	yield(get_tree(), "idle_frame")
 
 func make_duplicate(board):
 	var duplicate = ["_", "_", "_","_","_","_","_","_","_"]
@@ -306,6 +303,7 @@ func find_best_move(board,depth):
 			break
 		elif move_val == best_val:
 			board_choice.append(move)
+	randomize()
 	if board_choice.size() > 0:
 		var random:int = randi() % board_choice.size()
 		yield(get_tree(), "idle_frame")
