@@ -188,9 +188,41 @@ func _move_ai():
 
 
 func _check_win():
-	# if the winner is decided, find the win line then display it
-	# _pause = _game_won(true if player won else false, upper/leftmost tile index, lower/rightmost tile index)
-	pass
+	var current_board = make_duplicate(tiles)
+	if(!player1_turn == true):
+		if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
+			_pause = _game_won(!player1_turn,0,2)
+		elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
+			_pause = _game_won(!player1_turn,3,5)
+		elif(current_board[6] == current_board[7] and current_board[7] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(!player1_turn,6,8)
+		elif(current_board[0] == current_board[3] and current_board[3] == current_board[6] and current_board[6] != "_"):
+			_pause = _game_won(!player1_turn,0,6)
+		elif(current_board[1] == current_board[4] and current_board[4] == current_board[7] and current_board[7] != "_"):
+			_pause = _game_won(!player1_turn,1,7)
+		elif(current_board[2] == current_board[5] and current_board[5] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(!player1_turn,2,8)
+		elif(current_board[0] == current_board[4] and current_board[4] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(!player1_turn,0,8)
+		elif(current_board[2] == current_board[4] and current_board[4] == current_board[6] and current_board[6] != "_"):
+			_pause = _game_won(!player1_turn,6,2)
+	elif(!player1_turn == false):
+		if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
+			_pause = _game_won(player1_turn,0,2)
+		elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
+			_pause = _game_won(player1_turn,3,5)
+		elif(current_board[6] == current_board[7] and current_board[7] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(player1_turn,6,8)
+		elif(current_board[0] == current_board[3] and current_board[3] == current_board[6] and current_board[6] != "_"):
+			_pause = _game_won(player1_turn,0,6)
+		elif(current_board[1] == current_board[4] and current_board[4] == current_board[7] and current_board[7] != "_"):
+			_pause = _game_won(player1_turn,1,7)
+		elif(current_board[2] == current_board[5] and current_board[5] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(player1_turn,2,8)
+		elif(current_board[0] == current_board[4] and current_board[4] == current_board[8] and current_board[8] != "_"):
+			_pause = _game_won(player1_turn,0,8)
+		elif(current_board[2] == current_board[4] and current_board[4] == current_board[6] and current_board[6] != "_"):
+			_pause = _game_won(player1_turn,6,2) 
 
 func make_duplicate(board):
 	var duplicate = ["_", "_", "_","_","_","_","_","_","_"]
