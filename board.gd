@@ -8,6 +8,8 @@ var tiles = []
 var player1_turn = false
 var p1_color = null
 var p2_color = null
+var p1_str = "O"
+var p2_str = "X"
 var use_circle = true
 var _win_lines = []
 
@@ -37,7 +39,6 @@ func _ready():
 func _on_turn_end():
 	randomize()
 	use_circle = !use_circle
-	print(use_circle)
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
@@ -99,6 +100,8 @@ func _game_won(player1: bool, begin: int, end: int):
 	$Pause.hide()
 	_clear_board()
 	use_circle = true
+	p1_str = "O" if player1_turn else "X"
+	p2_str = "O" if not player1_turn else "X"
 	_move_ai()
 
 
@@ -109,6 +112,8 @@ func _game_draw():
 	$Pause.hide()
 	_clear_board()
 	use_circle = true
+	p1_str = "O" if player1_turn else "X"
+	p2_str = "O" if not player1_turn else "X"
 	_move_ai()
 
 
@@ -152,6 +157,7 @@ func _connect_signals():
 
 func _move_ai():
 	if not player1_turn and not $Pause.visible:
+		print("P1 = ", p1_str, "\nP2 = ", p2_str)
 		var best_move = yield(find_best_move(tiles, -1), "completed")
 		$GameStart/Timer.start(1.0)
 		yield($GameStart/Timer, "timeout")
