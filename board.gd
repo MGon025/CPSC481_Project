@@ -18,11 +18,6 @@ onready var _player1bg = get_node("Stats/BGLeft")
 onready var _player2bg = get_node("Stats/BGRight")
 onready var _p1_name = get_node("Stats/Names/Player1Name")
 onready var _p2_name = get_node("Stats/Names/Player2Name")
-# For testing. Remove or comment later
-#var _test_time = 0
-#var _test_count = 0
-
-
 
 
 # Called when the node enters the scene tree for the first time.
@@ -38,14 +33,6 @@ func _ready():
 	_clear_board()
 
 
-# Called at 60fps. delta is time between frames.
-#func _physics_process(delta):
-#	# For testing. Remove or comment when AI can make their own decisions
-#	# if _player2bg.visible and not $Pause.visible:
-#	# 	_test_ai(delta)
-#	pass
-
-
 # Called when a tile is clicked
 func _on_turn_end():
 	randomize()
@@ -56,8 +43,6 @@ func _on_turn_end():
 	player1_turn = !player1_turn
 	yield(_check_win(), "completed")
 	_move_ai()
-	# For testing. Remove or comment later
-	# _test_win()
 
 
 # Called when clicking after a game is finished.
@@ -87,8 +72,6 @@ func _on_game_start(player1: bool):
 	# Hide start menu
 	$GameStart.hide()
 	_move_ai()
-	# For testing. Remove or comment later
-#	_test_time = 0
 
 
 func _clear_board():
@@ -153,16 +136,6 @@ func _get_tile_nodes():
 		tiles.append(tile)
 
 
-# sets tile colors to BGLeft and BGRight depending on who goes first
-#func _set_tile_colors(player1: bool):
-#	# set tile colors based on player background colors
-#	for tile in tiles:
-#		tile.get_node("O").modulate = _player1bg.get_default_color() if\
-#				player1 else _player2bg.get_default_color()
-#		tile.get_node("X").modulate = _player2bg.get_default_color() if\
-#				player1 else _player1bg.get_default_color()
-
-
 # store all win line nodes. called once
 func _get_win_lines():
 	for node in $WinLines.get_children():
@@ -175,28 +148,6 @@ func _connect_signals():
 	$Pause/Click.connect("gui_input", self, "_on_continue")
 	# warning-ignore:return_value_discarded
 	$GameStart.connect("turn_decided", self, "_on_game_start")
-
-
-# example of the ai clicking tile 1 after 5 seconds
-#func _test_ai(delta):
-#	_test_time += delta
-#	#var best_move = find_best_move(tiles,-1)
-#	var best_move = find_best_move(tiles,-1)
-#	if _test_time >= 1:
-#		tiles[best_move].toggle_tile()
-#		_test_count += 1
-#	else:
-#		#print("waiting... " + str(_test_time))
-#		pass
-
-
-# example of the player winning with tiles 0,4,8
-# called when switching turns after 3 enemy actions
-#func _test_win():
-#	_test_time = 0
-#	if _test_count == 3:
-#		_pause = _game_won(false, 0, 8)
-#		_test_count = 0
 
 
 func _move_ai():
