@@ -230,10 +230,10 @@ func is_draw(board):
 		
 func minimax(board,depth,isMax):
 	#get value if maximizer wins
-	if evaluate_winner("X",board):
+	if evaluate_winner(p2_str,board):
 		return 10
 	#get value if minimizer wins
-	elif evaluate_winner("O",board):
+	elif evaluate_winner(p1_str,board):
 		return -10
 	#if draw no score
 	elif is_draw(board):
@@ -247,7 +247,7 @@ func minimax(board,depth,isMax):
 		for i in board.size():
 			if board[i] == "_":
 				#get value of every possible move
-				board[i] = "X"
+				board[i] = p2_str
 				#recursively call with more depth
 				var score = minimax(board,depth+1,false)
 				#reset board
@@ -264,7 +264,7 @@ func minimax(board,depth,isMax):
 		for i in board.size():
 			if board[i] == "_":
 				#get value of every possible move
-				board[i] = "O"
+				board[i] = p1_str
 				#recursively call with more depth
 				var score = minimax(board,depth+1,true)
 				#reset board
@@ -281,12 +281,10 @@ func find_best_move():
 	#arbitrary score
 	var best_move = -9999
 	var move  = 0
-	var human
-	var ai
 	#for all empty spaces 
 	for i in new_board.size():
 		if new_board[i] == "_":
-			new_board[i] = "X"
+			new_board[i] = p2_str
 			#get score
 			var score  = minimax(new_board,0,false)
 			#reset board
@@ -297,5 +295,3 @@ func find_best_move():
 				move = i
 	yield(get_tree(),"idle_frame")
 	return move
-			
-		
