@@ -45,9 +45,12 @@ func turn_off():
 
 
 func _turn_on(circle: bool):
+	var color = _board.p1_color if _board.player1_turn else _board.p2_color
 	if circle:
+		$O.modulate = color
 		get_node("O").visible = true
 	else:
+		$X.modulate = color
 		get_node("X").visible = true
 
 

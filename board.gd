@@ -6,6 +6,8 @@ extends Node2D
 
 var tiles = []
 var player1_turn = false
+var p1_color = null
+var p2_color = null
 var use_circle = true
 var _win_lines = []
 
@@ -28,6 +30,8 @@ func _ready():
 	$Pause.hide()
 	# reset marking colors
 	$Tiles.modulate = Color.white
+	p1_color = _player1bg.get_default_color()
+	p2_color = _player2bg.get_default_color()
 	_connect_signals()
 	_get_tile_nodes()
 	_get_win_lines()
@@ -44,7 +48,9 @@ func _ready():
 
 # Called when a tile is clicked
 func _on_turn_end():
+	randomize()
 	use_circle = !use_circle
+	print(use_circle)
 	_player1bg.visible = !_player1bg.visible
 	_player2bg.visible = !_player2bg.visible
 	player1_turn = !player1_turn
@@ -65,7 +71,7 @@ func _on_continue(event):
 
 # Called after the first player is decided
 func _on_game_start(player1: bool):
-	_set_tile_colors(player1)
+	# _set_tile_colors(player1)
 	player1_turn = player1
 
 	# Set up Stats nodes
@@ -109,6 +115,7 @@ func _game_won(player1: bool, begin: int, end: int):
 	# reset board
 	$Pause.hide()
 	_clear_board()
+	use_circle = true
 	_move_ai()
 
 
@@ -118,6 +125,7 @@ func _game_draw():
 	yield()
 	$Pause.hide()
 	_clear_board()
+	use_circle = true
 	_move_ai()
 
 
@@ -130,8 +138,8 @@ func _draw_win_line(player1: bool, begin: int, end: int):
 	if not win_line:
 		#print("win line " + str(begin) + str(end) + " does not exist")
 		return
-	var color = _player1bg.get_default_color() if player1\
-			else _player2bg.get_default_color()
+	var color = p1_color if player1\
+			else p2_color
 	win_line.set_default_color(color)
 	win_line.show()
 
@@ -146,13 +154,13 @@ func _get_tile_nodes():
 
 
 # sets tile colors to BGLeft and BGRight depending on who goes first
-func _set_tile_colors(player1: bool):
-	# set tile colors based on player background colors
-	for tile in tiles:
-		tile.get_node("O").modulate = _player1bg.get_default_color() if\
-				player1 else _player2bg.get_default_color()
-		tile.get_node("X").modulate = _player2bg.get_default_color() if\
-				player1 else _player1bg.get_default_color()
+#func _set_tile_colors(player1: bool):
+#	# set tile colors based on player background colors
+#	for tile in tiles:
+#		tile.get_node("O").modulate = _player1bg.get_default_color() if\
+#				player1 else _player2bg.get_default_color()
+#		tile.get_node("X").modulate = _player2bg.get_default_color() if\
+#				player1 else _player1bg.get_default_color()
 
 
 # store all win line nodes. called once
@@ -303,7 +311,6 @@ func find_best_move(board,depth):
 			break
 		elif move_val == best_val:
 			board_choice.append(move)
-	randomize()
 	if board_choice.size() > 0:
 		var random:int = randi() % board_choice.size()
 		yield(get_tree(), "idle_frame")
