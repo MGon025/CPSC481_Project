@@ -158,14 +158,14 @@ func _connect_signals():
 func _move_ai():
 	if not player1_turn and not $Pause.visible:
 		print("P1 = ", p1_str, "\nP2 = ", p2_str)
-		var best_move = yield(find_best_move(tiles, -1), "completed")
+		var best_move = yield(find_best_move(), "completed")
 		$GameStart/Timer.start(1.0)
 		yield($GameStart/Timer, "timeout")
 		tiles[best_move].toggle_tile()
 
 
 func _check_win():
-	var current_board = make_duplicate(tiles)
+	var current_board = make_duplicate()
 	if(current_board[0] == current_board[1] and current_board[1] == current_board[2] and current_board[2] != "_"):
 		_pause = _game_won(!player1_turn,0,2)
 	elif(current_board[3] == current_board[4] and current_board[4] == current_board[5] and current_board[5] != "_"):
@@ -186,8 +186,9 @@ func _check_win():
 		_pause = _game_draw()
 	yield(get_tree(), "idle_frame")
 
-func make_duplicate(board):
-	var duplicate = ["_", "_", "_","_","_","_","_","_","_"]
+func make_duplicate():
+	#create a duplicate array thats easier to work with
+	var duplicate = ["_","_","_","_","_","_","_","_","_"]
 	for i in tiles.size():
 		if tiles[i].get_node("X").visible == true:
 			duplicate[i] = "X"
@@ -196,84 +197,103 @@ func make_duplicate(board):
 		else:
 			duplicate[i] = "_"
 	return duplicate
-		
-		
-func get_empty(board):
-	var empty = []
-	for i in range(0,board.size()):
-		if board[i] == "_":
-			empty.append(i)
-	return empty
-	
-func check_winner(board,player):
-	if evaluate(board,player) != null:
+
+func evaluate_winner(player,board):
+	#if player is "X" or "O" return true if player is winning false for no win
+	if board[0] == board[1] and board[0] == board[2] and board[0] == player:
 		return true
-	for i in board:
-		if i == "_":
+	elif(board[3] == board[4] and board[3] == board[5] and board[3] == player):
+		return true
+	elif(board[6] == board[7] and board[6] == board[8] and board[6] == player):
+		return true
+	elif(board[0] == board[3] and board[0] == board[6] and board[0] == player):
+		return true
+	elif(board[1] == board[4] and board[1] == board[7] and board[1] == player):
+		return true
+	elif(board[2] == board[5] and board[2] == board[8] and board[2] == player):
+		return true
+	elif(board[0] == board[4] and board[0] == board[8] and board[0] == player):
+		return true
+	elif(board[6] == board[4] and board[6] == board[2] and board[6] == player):
+		return true
+	else:
+		return false
+		
+func is_draw(board):
+	#return true is draw false otherwise
+	for i in board.size():
+		if board[i] == "_":
 			return false
 	return true
-	
-func evaluate(board,player):
-	if ((board[0] == player and board[1] == player and board[2] == player) or 
-	(board[3] == player and board[4] == player and board[5] == player) or
-	(board[6] == player and board[7] == player and board[8] == player) or
-	(board[0] == player and board[3] == player and board[6] == player) or
-	(board[1] == player and board[4] == player and board[7] == player) or
-	(board[2] == player and board[5] == player and board[8] == player) or
-	(board[0] == player and board[4] == player and board[8] == player) or
-	(board[2] == player and board[4] == player and board[6] == player)):
-		return player
-	else:
-		return null
-			
 		
-func minimax(board,depth,player):
-	var empty = get_empty(board)
-	if depth == 0 or check_winner(board,player):
-		if evaluate(board,player) == "O":
-			return 0
-		elif evaluate(board,player) == "X":
-			return 100
-		else:
-			return 50
-	elif player == "X":
-		var best_val = 0
-		for i in empty:
-			board[i] = player
-			var move_val = minimax(board,depth-1,"O")
-			board[i] = "_"
-			best_val = max(best_val,move_val)
-		return best_val
-	elif player == "O":
-		var best_val = 100
-		for i in empty:
-			board[i] = player
-			var move_val = minimax(board,depth-1,"X")
-			board[i] = "_"
-			best_val = min(best_val,move_val)
-		return best_val
-
-func find_best_move(board,depth):
-	var new_board = make_duplicate(board)
-	var best_val = 40
-	var board_choice = []
-	var available = get_empty(new_board)
-	var player = "X"
-	for move in available:
-		new_board[move] = player
-		var move_val = minimax(new_board,depth-1,"O")
-		new_board[move] = "_"
-		if move_val > best_val:
-			board_choice = [move]
-			break
-		elif move_val == best_val:
-			board_choice.append(move)
-	if board_choice.size() > 0:
-		var random:int = randi() % board_choice.size()
-		yield(get_tree(), "idle_frame")
-		return board_choice[random]
+func minimax(board,depth,isMax):
+	#get value if maximizer wins
+	if evaluate_winner("X",board):
+		return 10
+	#get value if minimizer wins
+	elif evaluate_winner("O",board):
+		return -10
+	#if draw no score
+	elif is_draw(board):
+		return 0
+	
+	#if maximizer
+	if isMax:
+		#arbitrary low score
+		var best_score = -9999
+		#for all empty spaces on the board
+		for i in board.size():
+			if board[i] == "_":
+				#get value of every possible move
+				board[i] = "X"
+				#recursively call with more depth
+				var score = minimax(board,depth+1,false)
+				#reset board
+				board[i] = "_"
+				#return the final score that is greater
+				if score > best_score:
+					best_score = score
+		return best_score
+	#if minimizer
 	else:
-		var random:int = randi() % available.size()
-		yield(get_tree(), "idle_frame")
-		return available[random]
+		#arbitrary high score
+		var best_score = 9999
+		#for all empty spaces on the board
+		for i in board.size():
+			if board[i] == "_":
+				#get value of every possible move
+				board[i] = "O"
+				#recursively call with more depth
+				var score = minimax(board,depth+1,true)
+				#reset board
+				board[i] = "_"
+				#return the final score that is greater
+				if score < best_score:
+					best_score = score
+		return best_score
+	
+
+func find_best_move():
+	#make a easier to work with board
+	var new_board = make_duplicate()
+	#arbitrary score
+	var best_move = -9999
+	var move  = 0
+	var human
+	var ai
+	#for all empty spaces 
+	for i in new_board.size():
+		if new_board[i] == "_":
+			new_board[i] = "X"
+			#get score
+			var score  = minimax(new_board,0,false)
+			#reset board
+			new_board[i] = "_" 
+			#if score is better return that position of the board
+			if score > best_move:
+				best_move = score
+				move = i
+	yield(get_tree(),"idle_frame")
+	return move
+			
 		
